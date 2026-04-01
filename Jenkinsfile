@@ -6,6 +6,10 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
     }
 
+    tools {
+            maven 'Maven'
+        }
+
     stages {
         stage('Checkout') {
             steps {
