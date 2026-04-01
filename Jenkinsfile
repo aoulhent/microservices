@@ -12,7 +12,7 @@ pipeline {
                 echo '===== Checkout du projet depuis GitHub ====='
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/main']],
+                    branches: [[name: '*/master']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/aoulhent/microservices.git'
                     ]]
@@ -24,14 +24,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo '===== Construction du projet ====='
-                sh './mvnw clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
                 echo '===== Exécution des tests ====='
-                sh './mvnw test'
+                sh 'mvn test'
             }
         }
 
