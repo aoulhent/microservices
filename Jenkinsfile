@@ -10,6 +10,12 @@ pipeline {
             maven 'Maven'
         }
 
+    environment {
+            IMAGE_NAME = "back-api"
+            IMAGE_TAG = "latest"
+            DOCKER_REGISTRY = "oulhent/back-api"
+        }
+
     stages {
         stage('Checkout') {
             steps {
@@ -39,12 +45,26 @@ pipeline {
             }
         }
 
-        stage('Archive Results') {
+        stage('Build Docker Image') {
             steps {
-                echo '===== Archivage des résultats ====='
-                junit 'target/surefire-reports/**/*.xml'
-                archiveArtifacts artifacts: 'target/*.jar',
-                                  allowEmptyArchive: true
+                sh """
+                docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                """
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push $IMAGE_NAME:$IMAGE_TAG
+                    """
+                }
             }
         }
     }
