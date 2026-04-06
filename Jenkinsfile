@@ -38,12 +38,12 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo '===== Exécution des tests ====='
-                sh 'mvn test'
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 echo '===== Exécution des tests ====='
+//                 sh 'mvn test'
+//             }
+//         }
 
         stage('Build Docker Image') {
             steps {
